@@ -1,130 +1,125 @@
 # docker-commands
 
-docker create hello-world
+## Create docker
+
+    docker create hello-world
+
+### Start docker
+
+    docker start -a "dockerID"
+    docker run    "imageName"
+    docker start  "containerId"
+**Note:**  Docker Run is going to show you all the logs or al the information Docker start opposite but quickly
+
+###  Stop 
+
+    docker system prune :
+    docker stop containerId   stop process
+    docker kill containerId  
+
+### Docker list
+
+    docker ps 
+    
+    docker ps --all 
+
+### Docker logs
+
+    docker logs containerId
 
 
+### Executing Commands in Running Containers
 
---------------START --------------------
-docker start -a "dockerID"
-docker run    "imageName"
-docker start  "containerId"
+    docker exec -it containerId  redis-cli
+    docker exec -it containerId  sh 
+    docker run -it containerName sh
+**Note:**  -it : inside terminal
+### Stop all 
+    docker kill $(docker ps -q) 
+### Remove All    
 
-Docker Run is going to show you all the logs or al the information
-Docker start opposite but quickly
-------------------------------------------------------
-  Stop 
-----------------------------------------
-docker system prune :
-docker stop containerId   stop process
-docker kill containerId  
---------------------List working-----------------
+    docker rm $(docker ps -a -q) 
+### Remove all images
 
-docker ps 
+    docker rmi $(docker images -a -q)
+     
 
-docker ps --all 
------------------------------------------------
-------------------------LOGS-----------
-docker logs containerId
--------------------------------------------
-Executing Commands in Running Containers
---------------------------------------
-docker exec -it containerId
-docker exec -it containerId  redis-cli
--it : inside terminal
-docker exec -it containerId  sh 
-docker run -it containerName sh
+
 ------------------------------------------
-DOCKER BUILD
------------------------------
+## DOCKER BUILD
 
-FROM
-RUN
-CMD
+ 1. FROM 
+ 2. RUN 
+ 3. CMD
 Example :
 
+>         FROM alpine
+>         //Download and install a dependency
+>         `RUN apk add --update redis`    
+>         //Tell the image
+>         CMD ["redis-server"]
 
-# Use an existing docker image
-FROM alpine
-
-#Download and install a dependency
-
-RUN apk add --update redis
-
-#Tell the image
-
-CMD ["redis-server"]
-
-docker build . 
-------------------------------------
-Docker Build Add Tag
------------------------------
-Docker build -t deneme/redis:latest .
-
-tags -  image : Version- Specifies the directory of files
-
--------------------------------------------------
-MANUEL DOCKER BUILD
-docker run -it alpine sh
-apk add --update redis
-
-docker commit -c 'CMD ["redis-server"]' containerId
---
-FILE İşlemleri
-WORKDIR /usr/app
-COPY ./ /usr/app
-
-Port Mapping
-
-
-------------------------------------------
-Docker compose
-docker compose YML
-version: '3'
-services:
-     redis-server:
-        image: 'redis'
-     node-app:   
-        build: .
-        ports:
-            -"4001:8081" 
-Launch in background            
-sudo docker-compose up -d
-
-Stop Containers
-sudo docker-compose down
-docker kill $(docker ps -q)  Stop ALL Docker
-docker rm $(docker ps -a -q) Remove All Docker Container
----------------------------------------------------------
-Docker Restart Policies
-no : Never
-always : if this containers stops for any reason always attempt to restart it
-on-failure: Only restart if the container stops with an error code
-unless-stopped: Always restart unless we forcibly stop it
-
-npm run start 
-npm run build 
-
----------------------------
-Project Dockerize
-FROM  node:alpine
-WORKDIR  '/app'
-
-COPY  package.json .
-
-RUN npm install
-
-COPY . .
+ `docker build . `
  
-CMD ["npm","run","start"]
+### Docker Build Add Tag
 
-sudo docker build -f Dockerfile.dev .
-docker run -it -p 3000:3000 IMAGE_ID
-----------------------------------
-Docker Volume
+    docker build -t deneme/redis:latest .
+    
+**Note:**  tags -  image : Version- Specifies the directory of files
+
+    docker commit -c 'CMD ["redis-server"]' containerId
+
+### Docker Restart Policies
+***no :*** Never
+***always : *** if this containers stops for any reason always attempt to restart it
+**on-failure:** Only restart if the container stops with an error code
+**unless-stopped:** Always restart unless we forcibly stop it
+
+
+#### FILE  Operation
+
+> WORKDIR /usr/app 
+> COPY ./ /usr/app
+> 
+>     FROM  node:alpine
+>     RUN  mkdir  -p  /home/node/app  &&  chown  -R  node:node  /home/node/app
+>     WORKDIR  /home/node/app
+>     RUN  chgrp  -R  0  /home/node/app  &&  chmod  -R  g+rwX  /home/node/app
+>     COPY  package*.json  /home/node/app/
+>     USER  1000
+>     RUN  npm  install
+>     COPY  --chown=node:node  .  /home/node/app
+>     EXPOSE  3000
+>     CMD  ["npm","run","start"]
+### Port Mapping
+> `sudo docker run -p 3000:30000`
+-----------------------------------------------------------
+
+## Docker compose
+docker compose YML: 
+
+> version: '3' services:
+>      redis-server:
+>         image: 'redis'
+>      node-app:   
+>         build: .
+>         ports:
+>             -"4001:8081"
+
+##### Launch in background            
+
+    sudo docker-compose up -d
+
+###### Stop Containers
+
+    sudo docker-compose down
+
+## Docker Volume
 Docker Volumes, Docker Container’larındaki verileri saklamamız veya Container’lar arasında veri paylaşmamız gerektiğinde çok kullanışlıdır. Docker Volumes çok önemli bir kavramdır. Çünkü Docker Container silindiğinde tüm dosya sistemi de yok edilir. Bu gibi durumlarda verileri bir şekilde saklamak istiyorsak, Docker Volumes kullanmamız gerekiyor.
 
-docker volume create volume_name  //create
-docker volume rm volume_name     // REMOVE
+    docker volume create volume_name  //create
+    docker volume rm volume_name     // REMOVE
+
 docker run -d -it --name devtest -v volume_name:/var/www nginx:latest
 //Docker File 
 FROM alpine
@@ -142,14 +137,9 @@ services:
 Volumes ile çalışırken Container silerken Volume’ları da mutlaka yönetin. Yoksa sistemde gereksiz yere sismelere neden olabilir
 ----------------------------------------------
 sudo docker run -p 3000:30000 -v /app/node_modules -v $(pwd):/app 3547e79546d9
-docker rmi $(docker images -a -q)  // REMOVE ALL IMAGES
+
 ---------------------------------------------------------
 sudo gpasswd -a omerfarukicen docker
 newgrp docker
 sudo su omerfarukicen
 -----------------------------------------------------------
-
-
-
-
-
