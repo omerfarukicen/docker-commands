@@ -120,6 +120,9 @@ Docker Volumes, Docker Container’larındaki verileri saklamamız veya Containe
     docker volume create volume_name  //create
     docker volume rm volume_name     // REMOVE
 
+    docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app b8fe0b019bf4
+
+
 docker run -d -it --name devtest -v volume_name:/var/www nginx:latest
 //Docker File 
 FROM alpine
