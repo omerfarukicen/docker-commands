@@ -91,6 +91,18 @@ Example :
 >     COPY  --chown=node:node  .  /home/node/app
 >     EXPOSE  3000
 >     CMD  ["npm","run","start"]
+
+FROM node:alpine
+
+WORKDIR '/app'
+
+COPY package.json .
+RUN npm install
+
+COPY . .
+
+CMD ["npm", "run", "start"]
+
 ### Port Mapping
 > `sudo docker run -p 3000:30000`
 -----------------------------------------------------------
