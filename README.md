@@ -42,7 +42,10 @@
 ### Remove all images
 
     docker rmi $(docker images -a -q)
-     
+   **Note:**  /var/run/docker.sock: connect: permission denied ? 
+   sudo setfacl -m "g:docker:rw" /var/run/docker.sock
+   sudo addgroup --system docker 
+   newgrp docker
 
 
 ------------------------------------------
