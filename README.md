@@ -1,3 +1,4 @@
+
 # docker-commands
 
 ## Create docker
@@ -32,8 +33,12 @@
 
     docker exec -it containerId  redis-cli
     docker exec -it containerId  sh 
-    docker run -it containerName sh
+
+  Starting with Shell 
+
+`docker run -it containerName sh`
 **Note:**  -it : inside terminal
+
 ### Stop all 
     docker kill $(docker ps -q) 
 ### Remove All    
@@ -42,18 +47,22 @@
 ### Remove all images
 
     docker rmi $(docker images -a -q)
-   **Note:**  /var/run/docker.sock: connect: permission denied ? 
-   sudo setfacl -m "g:docker:rw" /var/run/docker.sock
-   sudo addgroup --system docker 
-   newgrp docker
+   **Note:**  
+ 
+
+>   /var/run/docker.sock: connect: permission denied ?
+
+       sudo setfacl -m "g:docker:rw" /var/run/docker.sock
+       sudo addgroup --system docker 
+       newgrp docker
 
 
 ------------------------------------------
 ## DOCKER BUILD
 
- 1. FROM 
- 2. RUN 
- 3. CMD
+ 1. FROM (Spacify a base image)
+ 2. RUN (Run some commands to install additional programs)
+ 3. CMD (Specify a command to run on container startup)
 Example :
 
 >         FROM alpine
@@ -65,19 +74,81 @@ Example :
  `docker build . `
  
 ### Docker Build Add Tag
+dockerID/ProjectName:version
 
     docker build -t deneme/redis:latest .
-    
+
 **Note:**  tags -  image : Version- Specifies the directory of files
 
     docker commit -c 'CMD ["redis-server"]' containerId
 
-### Docker Restart Policies
-***no :*** Never
-***always : *** if this containers stops for any reason always attempt to restart it
-**on-failure:** Only restart if the container stops with an error code
-**unless-stopped:** Always restart unless we forcibly stop it
+### Copying Build  Files
 
+COPY   ./    ./   
+| ./| ./  |
+|--|--|
+| Path to folder to copy from realative to build context |  stuff to inside the container |
+
+Specifying a working directory
+
+    WORKDIR /usr/app
+
+
+### Port Mapping
+
+    docker run -p localhostPort:port insideContainer imagename
+
+### Docker File
+
+```yaml
+# Specify a base image
+FROM  node:14-alpine
+WORKDIR  /usr/app
+# Install some depenendencies
+COPY  ./package.json  ./
+RUN  npm  install
+COPY  ./  ./
+# Default command
+CMD  ["npm",  "start"]
+```
+-----------------------------------------------------------
+
+## Docker compose
+docker compose YML: 
+```yaml
+version: '3'
+ services:
+  redis-server:
+   image: 'redis'
+  node-app:
+   build: .
+   ports:
+      - '4001:8081'
+```
+##### Launch in background            
+
+    sudo docker-compose up -d
+
+###### Stop Containers
+    sudo docker-compose down
+
+
+### Docker Restart Policies
+- **no :** Never
+- **always :** if this containers stops for any reason always attempt to restart it
+- **on-failure:** Only restart if the container stops with an error code
+- **unless-stopped:** Always restart unless we forcibly stop it
+```yaml
+version: '3'
+ services:
+  redis-server:
+   image: 'redis'
+  node-app:
+   restart : always  *****
+   build: .
+   ports:
+      - '4001:8081'
+```
 
 #### FILE  Operation
 
@@ -95,48 +166,29 @@ Example :
 >     EXPOSE  3000
 >     CMD  ["npm","run","start"]
 
-FROM node:alpine
 
-WORKDIR '/app'
 
-COPY package.json .
-RUN npm install
-
-COPY . .
-
-CMD ["npm", "run", "start"]
-
-### Port Mapping
-> `sudo docker run -p 3000:30000`
------------------------------------------------------------
-
-## Docker compose
-docker compose YML: 
-
-> version: '3' services:
->      redis-server:
->         image: 'redis'
->      node-app:   
->         build: .
->         ports:
->             -"4001:8081"
-
-##### Launch in background            
-
-    sudo docker-compose up -d
-
-###### Stop Containers
-
-    sudo docker-compose down
 
 ## Docker Volume
-Docker Volumes, Docker Container’larındaki verileri saklamamız veya Container’lar arasında veri paylaşmamız gerektiğinde çok kullanışlıdır. Docker Volumes çok önemli bir kavramdır. Çünkü Docker Container silindiğinde tüm dosya sistemi de yok edilir. Bu gibi durumlarda verileri bir şekilde saklamak istiyorsak, Docker Volumes kullanmamız gerekiyor.
-
-    docker volume create volume_name  //create
-    docker volume rm volume_name     // REMOVE
     
-    docker build -f Docker .
-    docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app b8fe0b019bf4
+    docker run -p 3000:3000 -v /node_modules -v $(pwd):/app containerID
+
+Docker Compose:
+```yaml
+version: '3'
+ services:
+  web:
+   build:
+    context: .
+    dockerfile: Dockerfile.dev
+   ports:
+     - '3000:3000'
+   volumes:
+     - /node_modules
+     - .:/app
+
+```
+
 
 
 docker run -d -it --name devtest -v volume_name:/var/www nginx:latest
