@@ -1,6 +1,11 @@
 
 # docker-commands
 
+## Create User
+   
+    sudo usermod -aG docker $USER
+    newgrp docker
+
 ## Create docker
 
     docker create hello-world
