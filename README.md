@@ -1,5 +1,9 @@
 
-# docker-commands
+# Docker-commands
+
+## Docker service 
+sudo service docker restart
+
 
 ## Create User
    
