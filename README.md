@@ -6,6 +6,12 @@
     sudo usermod -aG docker $USER
     newgrp docker
 
+>   /var/run/docker.sock: connect: permission denied ?
+
+       sudo setfacl -m "g:docker:rw" /var/run/docker.sock
+       sudo addgroup --system docker 
+       newgrp docker    
+
 ## Create docker
 
     docker create hello-world
@@ -55,11 +61,6 @@
    **Note:**  
  
 
->   /var/run/docker.sock: connect: permission denied ?
-
-       sudo setfacl -m "g:docker:rw" /var/run/docker.sock
-       sudo addgroup --system docker 
-       newgrp docker
 
 
 ------------------------------------------
