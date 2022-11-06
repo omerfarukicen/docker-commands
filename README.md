@@ -68,7 +68,7 @@
 
 
 ------------------------------------------
-## DOCKER BUILD
+### DOCKER BUILD
 
  1. FROM (Spacify a base image)
  2. RUN (Run some commands to install additional programs)
@@ -82,6 +82,9 @@ Example :
 >         CMD ["redis-server"]
 
  `docker build . `
+ 
+ Specific file
+ `docker build -f filename ` 
  
 ### Docker Build Add Tag
 dockerID/ProjectName:version
