@@ -43,6 +43,9 @@
 
     docker logs containerId
 
+### Docker resource consumption
+    
+    docker stats
 
 ### Executing Commands in Running Containers
 
