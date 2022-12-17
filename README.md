@@ -46,6 +46,10 @@
 ### Docker resource consumption
     
     docker stats
+    
+### Docker resource set
+    
+    docker run -d --cpus="2" --cpuset-cpus="0,4"  --memory=200m --memory-swap=400m containerId
 
 ### Executing Commands in Running Containers
 
@@ -207,20 +211,20 @@ version: '3'
 
 
 
-docker run -d -it --name devtest -v volume_name:/var/www nginx:latest
-//Docker File 
-FROM alpine
-VOLUME ["/data"]
-ENTRYPOINT ["/bin/sh"] 
-///Docker Compose
-version: '2'
-services:
-  webserver:
-    build: .
-    ports:
-     - "9000:80"
-    volumes:
-     - .:/usr/share/nginx/html
+      docker run -d -it --name devtest -v volume_name:/var/www nginx:latest
+### Docker File 
+      FROM alpine
+      VOLUME ["/data"]
+      ENTRYPOINT ["/bin/sh"] 
+### Docker Compose
+      version: '2'
+      services:
+	   webserver:
+	   build: .
+      ports:
+       - "9000:80"
+      volumes:
+      - .:/usr/share/nginx/html
 Volumes ile çalışırken Container silerken Volume’ları da mutlaka yönetin. Yoksa sistemde gereksiz yere sismelere neden olabilir
 ----------------------------------------------
 sudo docker run -p 3000:30000 -v /app/node_modules -v $(pwd):/app 3547e79546d9
