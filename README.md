@@ -71,8 +71,17 @@
     docker rmi $(docker images -a -q)
    **Note:**  
  
+### Docker Registry
 
+     sudo nano /etc/docker/daemon.json
+     
+     {
+        "insecure-registries" : [ "192.168.0.10:9002" ]
+     }
+     
+     sudo systemctl daemon-reload
 
+     sudo systemctl restart docker
 
 ------------------------------------------
 ### DOCKER BUILD
