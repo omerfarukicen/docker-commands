@@ -83,6 +83,8 @@
 
      sudo systemctl restart docker
 
+
+https://www.devopsschool.com/blog/how-to-upload-and-download-docker-images-using-nexus-registry-repository/
 ------------------------------------------
 ### DOCKER BUILD
 
